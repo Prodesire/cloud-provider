@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"errors"
-	v1alpha12 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
+	rosv1alpha1 "github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/v1alpha1"
 	"time"
 
 	"github.com/oam-dev/cloud-provider/alibabacloud/ros/pkg/application"
@@ -24,7 +24,7 @@ type AppConfHandler struct {
 }
 
 func (a *AppConfHandler) Handle(ctx *oam.ActionContext, ac runtime.Object, eType oam.EType) error {
-	appConf, ok := v1alpha12.NewApplicationConfiguration(ac)
+	appConf, ok := rosv1alpha1.NewApplicationConfiguration(ac)
 	if !ok {
 		return errors.New("type mismatch")
 	}
@@ -42,7 +42,7 @@ func (a *AppConfHandler) Id() string {
 	return "appConfHandler"
 }
 
-func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *v1alpha12.ApplicationConfiguration) (err error) {
+func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
 	logging.Default.Info("Handle create or update", "AppConf", appConf)
 
 	// ros context
@@ -142,7 +142,7 @@ func (a *AppConfHandler) CreateOrUpdate(ctx *oam.ActionContext, appConf *v1alpha
 	return
 }
 
-func (a *AppConfHandler) Delete(ctx *oam.ActionContext, appConf *v1alpha12.ApplicationConfiguration) (err error) {
+func (a *AppConfHandler) Delete(ctx *oam.ActionContext, appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
 	logging.Default.Info("Handle delete", "AppConf", appConf)
 
 	appName := appConf.Name
