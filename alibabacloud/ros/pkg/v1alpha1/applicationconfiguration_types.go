@@ -48,10 +48,18 @@ func NewApplicationConfiguration(ac interface{}) (appConf *ApplicationConfigurat
 }
 
 func (a *ApplicationConfiguration) ToOamApplicationConfiguration() *oamv1alpha1.ApplicationConfiguration {
+	a.oamAppConf.TypeMeta = a.TypeMeta
+	a.oamAppConf.ObjectMeta = a.ObjectMeta
+	a.oamAppConf.Spec = a.Spec
+	a.oamAppConf.Status = a.Status
 	return a.oamAppConf
 }
 
 func (a *ApplicationConfiguration) ToRosStack() *rosv1alpha1.RosStack {
+	a.rosStack.TypeMeta = a.TypeMeta
+	a.rosStack.ObjectMeta = a.ObjectMeta
+	a.rosStack.Spec = a.Spec
+	a.rosStack.Status = a.Status
 	return a.rosStack
 }
 

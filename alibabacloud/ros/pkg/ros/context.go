@@ -48,12 +48,18 @@ func (c *Context) GetAppConf() (appConf *rosv1alpha1.ApplicationConfiguration, e
 
 func (c *Context) UpdateAppConf(appConf *rosv1alpha1.ApplicationConfiguration) (err error) {
 	if c.OamCrdClient != nil {
-		appConfInterface := c.OamCrdClient.CoreV1alpha1().ApplicationConfigurations(c.AppConf.Namespace)
+		appConfInterface := c.OamCrdClient.CoreV1alpha1().ApplicationConfigurations(appConf.Namespace)
 		_, err = appConfInterface.Update(appConf.ToOamApplicationConfiguration())
+		if err == nil {
+			c.AppConf = appConf
+		}
 		return
 	} else if c.RosCrdClient != nil {
-		appConfInterface := c.RosCrdClient.RosV1alpha1().RosStacks(c.AppConf.Namespace)
+		appConfInterface := c.RosCrdClient.RosV1alpha1().RosStacks(appConf.Namespace)
 		_, err = appConfInterface.Update(appConf.ToRosStack())
+		if err == nil {
+			c.AppConf = appConf
+		}
 		return
 	}
 	return errors.New("no client found")
@@ -95,14 +101,18 @@ func (c *Context) UpdateAppConfStatus(
 	}
 
 	if c.OamCrdClient != nil {
-		appConfInterface := c.OamCrdClient.CoreV1alpha1().ApplicationConfigurations(c.AppConf.Namespace)
+		appConfInterface := c.OamCrdClient.CoreV1alpha1().ApplicationConfigurations(appConf.Namespace)
 		_, err = appConfInterface.UpdateStatus(updateConf.ToOamApplicationConfiguration())
-		return
 	} else {
-		appConfInterface := c.RosCrdClient.RosV1alpha1().RosStacks(c.AppConf.Namespace)
+		appConfInterface := c.RosCrdClient.RosV1alpha1().RosStacks(appConf.Namespace)
 		_, err = appConfInterface.UpdateStatus(updateConf.ToRosStack())
-		return
 	}
+
+	if err == nil {
+		c.AppConf = updateConf
+	}
+
+	return
 }
 
 func GetContext(
