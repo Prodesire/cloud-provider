@@ -64,5 +64,9 @@ func (a *ApplicationConfiguration) ToRosStack() *rosv1alpha1.RosStack {
 }
 
 func (a *ApplicationConfiguration) ToObject() v1.Object {
-	return interface{}(a).(v1.Object)
+	if a.isOamAppConf {
+		return interface{}(a.oamAppConf).(v1.Object)
+	} else {
+		return interface{}(a.rosStack).(v1.Object)
+	}
 }
